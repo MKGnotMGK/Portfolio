@@ -275,6 +275,81 @@
     }
   }
 
+  /* Project Card Enhancements */
+  .project-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+  }
+
+  .project-card:hover {
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow: 0 0 30px rgba(251, 146, 60, 0.2), 0 20px 60px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
+  }
+
+  .project-card:hover::before {
+    opacity: 1;
+  }
+
+  .project-tag {
+    transition: all 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .project-card:hover .project-tag {
+    background-color: rgba(251, 146, 60, 0.2);
+    color: rgba(251, 146, 60, 1);
+    transform: scale(1.05);
+  }
+
+  /* Grid Layout for Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card {
+      transition: none;
+    }
+    .project-card::before {
+      transition: none;
+    }
+    .project-card:hover {
+      transform: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    }
+    .project-tag {
+      transition: none;
+    }
+    .project-card:hover .project-tag {
+      transform: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .portfolio-button {
       transition: none;
