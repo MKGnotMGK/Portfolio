@@ -229,6 +229,68 @@
     animation: slide-up-fade 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
 
+  /* Portfolio Button Enhancements */
+  .portfolio-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .portfolio-button:hover:not(:disabled) {
+    box-shadow: 0 0 30px rgba(251, 146, 60, 0.6), 0 0 60px rgba(251, 146, 60, 0.3);
+    transform: scale(1.05);
+  }
+
+  .portfolio-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .portfolio-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .portfolio-button:active::before {
+    animation: ripple-effect 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes ripple-effect {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-button {
+      transition: none;
+    }
+    .portfolio-button:hover:not(:disabled) {
+      box-shadow: none;
+      transform: none;
+    }
+    .portfolio-button:active:not(:disabled) {
+      transform: none;
+    }
+    .portfolio-button:active::before {
+      animation: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .prediction-button-base {
       transition: none;

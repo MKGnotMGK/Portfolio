@@ -54,7 +54,7 @@ export default function About() {
         <div className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '1500ms', animationFillMode: 'both' }}>
           <Button
             onClick={handleShowPortfolio}
-            className="bg-accent text-accent-foreground hover:bg-accent/90 px-8 py-6 text-lg font-display gap-3 group"
+            className="portfolio-button bg-accent text-accent-foreground px-8 py-6 text-lg font-display gap-3 group"
           >
             Show Portfolio
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
