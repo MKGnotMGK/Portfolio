@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CheckCircle2, Trophy } from 'lucide-react';
+import { Countdown } from '@/components/Countdown';
 
 /**
  * Tactical Board Design System
@@ -30,6 +31,7 @@ const NEXT_MATCH = {
   },
   date: 'June 23, 2026',
   time: '4:00 PM ET',
+  kickoffTime: new Date('2026-06-23T20:00:00Z'), // 4:00 PM ET = 8:00 PM UTC
   stadium: 'Gillette Stadium, Foxborough, MA',
   competition: 'FIFA World Cup 2026 - Group L',
 };
@@ -84,6 +86,11 @@ export default function Home() {
           <p className="text-muted-foreground text-lg">
             Make your prediction for the next featured match
           </p>
+        </div>
+
+        {/* Countdown Timer */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <Countdown targetDate={NEXT_MATCH.kickoffTime} />
         </div>
 
         {/* Match Card */}
@@ -219,6 +226,7 @@ export default function Home() {
         {/* Footer Info */}
         <div className="mt-16 text-center text-muted-foreground text-sm">
           <p>This is the next featured unplayed match in the FIFA World Cup 2026</p>
+          <p className="mt-2 text-xs opacity-70">Countdown updates every second</p>
         </div>
       </div>
     </div>
