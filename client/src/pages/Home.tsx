@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { CheckCircle2, Trophy } from 'lucide-react';
+import { CheckCircle2, Trophy, Lock } from 'lucide-react';
 import { Countdown } from '@/components/Countdown';
+import { Confetti } from '@/components/Confetti';
 
 /**
  * Tactical Board Design System
@@ -10,6 +12,7 @@ import { Countdown } from '@/components/Countdown';
  * - Large match card with team information
  * - Asymmetric prediction button layout
  * - Smooth interactions with hover and click feedback
+ * - Confetti animation on prediction lock-in
  */
 
 interface Prediction {
@@ -55,18 +58,41 @@ const PREDICTIONS: Prediction[] = [
 ];
 
 export default function Home() {
+  const [, navigate] = useLocation();
   const [selectedPrediction, setSelectedPrediction] = useState<string | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [triggerConfetti, setTriggerConfetti] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handlePredictionClick = (predictionType: string) => {
     setSelectedPrediction(predictionType);
     setShowConfirmation(true);
-    // Auto-hide confirmation after 2 seconds
-    setTimeout(() => setShowConfirmation(false), 2000);
+    setTriggerConfetti(true);
+    // Reset confetti trigger after animation
+    setTimeout(() => setTriggerConfetti(false), 100);
+  };
+
+  const handleLockInPrediction = () => {
+    if (!selectedPrediction) return;
+
+    // Trigger fade-out animation
+    setIsTransitioning(true);
+
+    // Navigate after animation completes
+    setTimeout(() => {
+      navigate(`/confirmation?prediction=${selectedPrediction}`);
+    }, 500);
   };
 
   return (
-    <div className="min-h-screen bg-background tactical-grid relative overflow-hidden">
+    <div
+      className={`min-h-screen bg-background tactical-grid relative overflow-hidden transition-opacity duration-500 ${
+        isTransitioning ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      {/* Confetti Animation */}
+      <Confetti trigger={triggerConfetti} duration={2500} />
+
       {/* Subtle background accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
@@ -161,7 +187,7 @@ export default function Home() {
                 onClick={() => handlePredictionClick('win')}
                 className={`prediction-button-base w-full h-16 font-display text-lg transition-all ${
                   selectedPrediction === 'win'
-                    ? 'bg-accent text-accent-foreground shadow-lg'
+                    ? 'bg-accent text-accent-foreground shadow-lg prediction-button-selected'
                     : 'bg-secondary hover:bg-secondary/80 text-foreground'
                 }`}
                 variant={selectedPrediction === 'win' ? 'default' : 'outline'}
@@ -181,7 +207,7 @@ export default function Home() {
                 onClick={() => handlePredictionClick('draw')}
                 className={`prediction-button-base h-16 font-display text-lg transition-all ${
                   selectedPrediction === 'draw'
-                    ? 'bg-accent text-accent-foreground shadow-lg'
+                    ? 'bg-accent text-accent-foreground shadow-lg prediction-button-selected'
                     : 'bg-secondary hover:bg-secondary/80 text-foreground'
                 }`}
                 variant={selectedPrediction === 'draw' ? 'default' : 'outline'}
@@ -198,7 +224,7 @@ export default function Home() {
                 onClick={() => handlePredictionClick('loss')}
                 className={`prediction-button-base h-16 font-display text-lg transition-all ${
                   selectedPrediction === 'loss'
-                    ? 'bg-accent text-accent-foreground shadow-lg'
+                    ? 'bg-accent text-accent-foreground shadow-lg prediction-button-selected'
                     : 'bg-secondary hover:bg-secondary/80 text-foreground'
                 }`}
                 variant={selectedPrediction === 'loss' ? 'default' : 'outline'}
@@ -215,10 +241,17 @@ export default function Home() {
 
           {/* Confirmation Message */}
           {showConfirmation && selectedPrediction && (
-            <div className="mt-8 p-4 rounded-lg bg-accent/10 border border-accent/30 text-center animate-in fade-in duration-200">
-              <p className="text-accent font-medium">
-                ✓ Prediction Locked In: {PREDICTIONS.find(p => p.type === selectedPrediction)?.label}
+            <div className="mt-8 p-4 rounded-lg bg-accent/10 border border-accent/30 text-center confirmation-message">
+              <p className="text-accent font-medium mb-4">
+                ✓ Prediction Selected: {PREDICTIONS.find(p => p.type === selectedPrediction)?.label}
               </p>
+              <Button
+                onClick={handleLockInPrediction}
+                className="w-full bg-accent text-accent-foreground hover:bg-accent/90 gap-2"
+              >
+                <Lock className="w-4 h-4" />
+                Lock In Prediction
+              </Button>
             </div>
           )}
         </div>

@@ -195,6 +195,40 @@
     transform: scale(0.98);
   }
 
+  .prediction-button-selected {
+    animation: pulse-glow 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  @keyframes pulse-glow {
+    0% {
+      box-shadow: 0 0 0 0 currentColor, 0 0 20px currentColor;
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 0 15px rgba(255, 255, 255, 0), 0 0 40px currentColor;
+      transform: scale(1.02);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 20px currentColor;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slide-up-fade {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .confirmation-message {
+    animation: slide-up-fade 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .prediction-button-base {
       transition: none;
@@ -205,6 +239,12 @@
     }
     .prediction-button-base:active:not(:disabled) {
       transform: none;
+    }
+    .prediction-button-selected {
+      animation: none;
+    }
+    .confirmation-message {
+      animation: none;
     }
   }
 
