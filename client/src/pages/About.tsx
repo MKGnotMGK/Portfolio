@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { AnimatedText } from '@/components/AnimatedText';
+import { InteractiveParticles } from '@/components/InteractiveParticles';
 
 /**
  * About/Marketing Page
@@ -27,6 +28,9 @@ export default function About() {
         isTransitioning ? 'opacity-0' : 'opacity-100'
       }`}
     >
+      {/* Interactive Particle Background */}
+      <InteractiveParticles />
+
       {/* Subtle background accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
