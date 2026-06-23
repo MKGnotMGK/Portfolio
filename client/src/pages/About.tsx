@@ -3,17 +3,19 @@ import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
-import { AnimatedText } from '@/components/AnimatedText';
+import { TypewriterText } from '@/components/TypewriterText';
 import { InteractiveParticles } from '@/components/InteractiveParticles';
 
 /**
  * About/Marketing Page
- * Features animated tagline and portfolio CTA
+ * Features typewriter text animation and portfolio CTA
+ * Button only appears after text animation completes
  */
 
 export default function About() {
   const [, navigate] = useLocation();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isTextComplete, setIsTextComplete] = useState(false);
 
   const handleShowPortfolio = () => {
     setIsTransitioning(true);
@@ -39,27 +41,30 @@ export default function About() {
 
       {/* Main content */}
       <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 flex flex-col items-center justify-center min-h-screen">
-        {/* Animated Text Card */}
+        {/* Typewriter Text Card */}
         <div className="max-w-3xl mx-auto mb-12">
           <Card className="match-card-shadow bg-card border border-border/50 p-8 md:p-16">
-            <AnimatedText
+            <TypewriterText
               text="Your prediction can be either right or wrong, but betting on me is always the right choice"
               className="font-display text-3xl md:text-5xl text-foreground leading-tight"
-              delay={300}
+              speed={40}
+              onComplete={() => setIsTextComplete(true)}
             />
           </Card>
         </div>
 
-        {/* Portfolio Button */}
-        <div className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '1500ms', animationFillMode: 'both' }}>
-          <Button
-            onClick={handleShowPortfolio}
-            className="portfolio-button bg-accent text-accent-foreground px-8 py-6 text-lg font-display gap-3 group"
-          >
-            Show Portfolio
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>
-        </div>
+        {/* Portfolio Button - Fades in after text is complete */}
+        {isTextComplete && (
+          <div className="mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <Button
+              onClick={handleShowPortfolio}
+              className="portfolio-button bg-accent text-accent-foreground px-8 py-6 text-lg font-display gap-3 group"
+            >
+              Show Portfolio
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </Button>
+          </div>
+        )}
 
         {/* Decorative elements */}
         <div className="absolute bottom-20 left-10 w-32 h-32 bg-accent/10 rounded-full blur-2xl opacity-50" />
