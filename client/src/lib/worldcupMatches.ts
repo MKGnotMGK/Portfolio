@@ -223,23 +223,42 @@ const WORLD_CUP_2026_MATCHES: Match[] = [
 ];
 
 /**
- * Get the next unplayed match
- * Returns the first match that hasn't been played yet
+ * Get the closest upcoming unplayed match
+ * Returns the nearest match that hasn't been played yet
+ * Prioritizes matches closest to current time
  */
 export function getNextUnplayedMatch(): Match | null {
   const now = new Date();
   
-  // Find the first unplayed match that hasn't started yet
-  const upcomingMatch = WORLD_CUP_2026_MATCHES.find(
+  // Find all unplayed matches that haven't started yet
+  const upcomingMatches = WORLD_CUP_2026_MATCHES.filter(
     match => !match.played && match.kickoffTime > now
   );
 
-  if (upcomingMatch) {
-    return upcomingMatch;
+  if (upcomingMatches.length === 0) {
+    // If no upcoming matches, find the first unplayed match (in progress or recently finished)
+    return WORLD_CUP_2026_MATCHES.find(match => !match.played) || null;
   }
 
-  // If no upcoming match found, find the first unplayed match (even if it's in progress)
-  return WORLD_CUP_2026_MATCHES.find(match => !match.played) || null;
+  // Return the closest upcoming match (minimum time difference)
+  return upcomingMatches.reduce((closest, current) => {
+    const closestDiff = closest.kickoffTime.getTime() - now.getTime();
+    const currentDiff = current.kickoffTime.getTime() - now.getTime();
+    return currentDiff < closestDiff ? current : closest;
+  });
+}
+
+/**
+ * Get all upcoming unplayed matches sorted by kickoff time
+ * Useful for showing match schedule
+ */
+export function getUpcomingMatches(limit?: number): Match[] {
+  const now = new Date();
+  const upcoming = WORLD_CUP_2026_MATCHES.filter(
+    match => !match.played && match.kickoffTime > now
+  ).sort((a, b) => a.kickoffTime.getTime() - b.kickoffTime.getTime());
+  
+  return limit ? upcoming.slice(0, limit) : upcoming;
 }
 
 /**

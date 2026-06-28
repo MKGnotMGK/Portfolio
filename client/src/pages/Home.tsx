@@ -63,9 +63,9 @@ export default function Home() {
 
     loadCurrentMatch();
 
-    // Check for match updates every 30 seconds
+    // Check for match updates every 10 seconds for real-time responsiveness
     // In a real app, this would be a WebSocket or polling from a backend
-    const interval = setInterval(loadCurrentMatch, 30000);
+    const interval = setInterval(loadCurrentMatch, 10000);
 
     return () => clearInterval(interval);
   }, []);
@@ -339,10 +339,30 @@ export default function Home() {
           )}
         </div>
 
+        {/* Demo Button - Simulate Match Completion */}
+        <div className="mt-12 max-w-2xl mx-auto">
+          <Button
+            onClick={() => {
+              if (!currentMatch) return;
+              localStorage.setItem(`match-${currentMatch.id}-played`, 'true');
+              localStorage.setItem(`match-${currentMatch.id}-result`, JSON.stringify({ team1Goals: 2, team2Goals: 1 }));
+              const nextMatch = getNextUnplayedMatch();
+              setCurrentMatch(nextMatch);
+              setTournamentProgress(getTournamentProgress());
+              if (!nextMatch) setTournamentEnded(true);
+            }}
+            variant="outline"
+            className="w-full text-xs opacity-60 hover:opacity-100"
+          >
+            Demo: Mark Current Match as Played & Load Next
+          </Button>
+        </div>
+
         {/* Footer Info */}
         <div className="mt-16 text-center text-muted-foreground text-sm">
           <p>Match #{currentMatch.matchNumber} of the FIFA World Cup 2026</p>
           <p className="mt-2 text-xs opacity-70">This page automatically updates to show the next unplayed match</p>
+          <p className="mt-2 text-xs opacity-70">Auto-refresh checks every 10 seconds</p>
         </div>
       </div>
     </div>
