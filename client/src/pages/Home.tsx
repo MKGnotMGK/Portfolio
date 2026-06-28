@@ -6,6 +6,7 @@ import { CheckCircle2, Trophy, Lock, AlertCircle } from 'lucide-react';
 import { Countdown } from '@/components/Countdown';
 import { Confetti } from '@/components/Confetti';
 import { getNextUnplayedMatch, getTournamentProgress, type Match } from '@/lib/worldcupMatches';
+import { savePrediction } from '@/lib/predictionsStorage';
 
 /**
  * World Cup Match Predictor - Home Page
@@ -85,6 +86,17 @@ export default function Home() {
 
   const handleLockInPrediction = () => {
     if (!selectedPrediction || !currentMatch) return;
+
+    // Save prediction to local storage
+    savePrediction(
+      currentMatch.id,
+      currentMatch.team1.name,
+      currentMatch.team2.name,
+      currentMatch.team1.flag,
+      currentMatch.team2.flag,
+      selectedPrediction as 'win' | 'draw' | 'loss',
+      currentMatch.stage === 'Group' ? `Group ${currentMatch.group}` : currentMatch.stage
+    );
 
     // Trigger fade-out animation
     setIsTransitioning(true);
@@ -363,6 +375,15 @@ export default function Home() {
           <p>Match #{currentMatch.matchNumber} of the FIFA World Cup 2026</p>
           <p className="mt-2 text-xs opacity-70">This page automatically updates to show the next unplayed match</p>
           <p className="mt-2 text-xs opacity-70">Auto-refresh checks every 10 seconds</p>
+          <div className="mt-6">
+            <Button
+              onClick={() => navigate('/my-predictions')}
+              variant="outline"
+              className="gap-2"
+            >
+              View My Predictions
+            </Button>
+          </div>
         </div>
       </div>
     </div>
